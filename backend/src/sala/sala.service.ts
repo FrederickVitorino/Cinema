@@ -1,29 +1,42 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateSalaDto } from './dto/create-sala.dto';
 import { UpdateSalaDto } from './dto/update-sala.dto';
+import { Sala } from '../../generated/prisma';
 
 @Injectable()
 export class SalaService {
   constructor(private prisma: PrismaService) {}
 
-  create(data: CreateSalaDto) {
+  async create(data: CreateSalaDto): Promise<Sala> {
     return this.prisma.sala.create({ data });
   }
 
-  findAll() {
+  async findAll(): Promise<Sala[]> {
     return this.prisma.sala.findMany();
   }
 
-  findOne(id: number) {
-    return this.prisma.sala.findUnique({ where: { id } });
+  async findOne(id: number): Promise<Sala> {
+    const sala = await this.prisma.sala.findUnique({ where: { id } });
+    if (!sala) {
+      throw new NotFoundException(`Sala com ID ${id} não encontrada.`);
+    }
+    return sala;
   }
 
-  update(id: number, data: UpdateSalaDto) {
+  async update(id: number, data: UpdateSalaDto): Promise<Sala> {
+    const sala = await this.prisma.sala.findUnique({ where: { id } });
+    if (!sala) {
+      throw new NotFoundException(`Sala com ID ${id} não encontrada para atualização.`);
+    }
     return this.prisma.sala.update({ where: { id }, data });
   }
 
-  remove(id: number) {
+  async remove(id: number): Promise<Sala> {
+    const sala = await this.prisma.sala.findUnique({ where: { id } });
+    if (!sala) {
+      throw new NotFoundException(`Sala com ID ${id} não encontrada para remoção.`);
+    }
     return this.prisma.sala.delete({ where: { id } });
   }
 }

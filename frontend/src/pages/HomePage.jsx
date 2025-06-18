@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button } from '../components/buttons/Button';
+import { Button } from '../components/Buttons/Button';
 
 export function HomePage() {
   const [filmes, setFilmes] = useState([]);

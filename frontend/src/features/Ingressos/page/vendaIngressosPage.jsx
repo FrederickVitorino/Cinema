@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { LabelInput } from '../../../components/Input/LabelInput';
 import { SelectInput } from '../../../components/Input/SelectInput';
-import { Button } from '../../../components/buttons/Button';
+import { Button } from '../../../components/Buttons/Button';
 import { useLocation } from 'react-router-dom';
 import { getSessoes } from '../../Sessoes/services/sessaoApi';
 import { createIngresso } from '../services/ingressoApi';

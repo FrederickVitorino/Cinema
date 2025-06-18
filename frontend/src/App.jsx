@@ -1,5 +1,5 @@
 import './global.css';
-import { Menu } from './components/menu/Menu';
+import { Menu } from './components/Menu/Menu';
 import { AppRoutes } from './routes/AppRoutes';
 
 export default function App() {

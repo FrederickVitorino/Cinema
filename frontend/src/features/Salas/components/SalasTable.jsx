@@ -1,4 +1,4 @@
-import { Button } from "../../../components/buttons/Button";
+import { Button } from "../../../components/Buttons/Button";
 
 export function SalasTable({ salas, onEditar, onExcluir }) {
   return (

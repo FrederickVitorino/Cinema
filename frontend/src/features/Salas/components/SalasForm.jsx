@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Button } from "../../../components/buttons/Button";
+import { Button } from "../../../components/Buttons/Button";
 import { SelectInput } from "../../../components/Input/SelectInput";
 import { LabelInput } from "../../../components/Input/LabelInput";
 

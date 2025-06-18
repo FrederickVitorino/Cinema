@@ -1,0 +1,87 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: cinema-frontend:latest
+    container_name: cinema-frontend
+    env_file:
+      - .env
+    environment:
+      - PORT=${FRONTEND_PORT}
+    ports:
+      - "${FRONTEND_PORT}:${FRONTEND_PORT}"
+    depends_on:
+      - backend
+    networks:
+      - cinema-net
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: cinema-backend:latest
+    container_name: cinema-backend
+    env_file:
+      - .env
+    environment:
+      - PORT=${BACKEND_PORT}
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:${POSTGRES_PORT}/${POSTGRES_DB}
+    ports:
+      - "${BACKEND_PORT}:${BACKEND_PORT}"
+    depends_on:
+      - postgres
+    networks:
+      - cinema-net
+
+  postgres:
+    image: postgres:alpine
+    container_name: cinema-postgres
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - cinema-net
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: cinema-pgadmin
+    env_file:
+      - .env
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
+    ports:
+      - "${PGADMIN_PORT}:80"
+    depends_on:
+      - postgres
+    networks:
+      - cinema-net
+
+  nginx:
+    image: nginx:alpine
+    container_name: cinema-nginx
+    depends_on:
+      - frontend
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "80:80"
+    networks:
+      - cinema-net
+
+volumes:
+  pgdata:
+
+networks:
+  cinema-net:
+    driver: bridge
